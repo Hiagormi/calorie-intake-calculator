@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日热量摄入计算器 - 健康热量助手</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 页面头部 -->
+        <header class="header">
+            <h1>每日热量摄入计算器</h1>
+            <p class="subtitle">基于中国临床营养实践的健康热量助手</p>
+        </header>
+
+        <!-- 主要内容区 -->
+        <main class="main-content">
+            <!-- 输入表单区 -->
+            <section class="form-section">
+                <form id="calcForm" class="calc-form">
+                    <!-- 基本信息 -->
+                    <div class="form-group">
+                        <label class="form-label">性别 *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="male" checked>
+                                <span class="radio-text">男</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="female">
+                                <span class="radio-text">女</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age" class="form-label">年龄 *</label>
+                            <input type="number" id="age" name="age" min="18" max="85" placeholder="18-85" required>
+                            <span class="unit">岁</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height" class="form-label">身高 *</label>
+                            <input type="number" id="height" name="height" min="100" max="250" step="0.1" placeholder="例如: 175" required>
+                            <span class="unit">cm</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight" class="form-label">体重 *</label>
+                            <input type="number" id="weight" name="weight" min="30" max="200" step="0.1" placeholder="例如: 72" required>
+                            <span class="unit">kg</span>
+                        </div>
+                    </div>
+
+                    <!-- 活动水平 -->
+                    <div class="form-group">
+                        <label class="form-label">活动水平 *</label>
+                        <div class="radio-group vertical">
+                            <label class="radio-label">
+                                <input type="radio" name="activity" value="25">
+                                <span class="radio-text">
+                                    <strong>长期卧床 / 极低活动</strong>
+                                    <small>标准体重每千克耗能 25 千卡</small>
+                                </span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="activity" value="30" checked>
+                                <span class="radio-text">
+                                    <strong>轻体力活动</strong>
+                                    <small>办公室、白领、公务员、久坐（30 千卡/kg）</small>
+                                </span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="activity" value="35">
+                                <span class="radio-text">
+                                    <strong>中体力活动</strong>
+                                    <small>教师、销售、每天走8000-12000步（35 千卡/kg）</small>
+                                </span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="activity" value="40">
+                                <span class="radio-text">
+                                    <strong>重体力活动</strong>
+                                    <small>建筑工、快递员、农民、重体力劳动（40 千卡/kg）</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 特殊情况 -->
+                    <div class="form-group">
+                        <label class="form-label">特殊情况（可多选）</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="condition" value="obesity" id="obesity">
+                                <span class="checkbox-text">明显超重/肥胖（BMI≥28）</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="condition" value="diabetes" id="diabetes">
+                                <span class="checkbox-text">糖尿病前期/糖尿病</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="condition" value="brain" id="brain">
+                                <span class="checkbox-text">脑部疾病相关</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="condition" value="lowcarb" id="lowcarb">
+                                <span class="checkbox-text">想优先粗粮/控碳（减脂/控糖倾向）</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 提交按钮 -->
+                    <button type="submit" class="submit-btn">开始计算</button>
+                </form>
+            </section>
+
+            <!-- 结果展示区 -->
+            <section id="resultSection" class="result-section hidden">
+                <h2 class="result-title">您的每日推荐热量摄入</h2>
+
+                <!-- 核心数据卡片 -->
+                <div class="result-card">
+                    <div class="total-calories">
+                        <span class="calories-value" id="totalCalories">0</span>
+                        <span class="calories-unit">千卡/天</span>
+                    </div>
+                    <div class="standard-weight">
+                        标准体重：<span id="standardWeight">0</span> kg
+                    </div>
+                    <div class="bmi-info">
+                        当前BMI：<span id="currentBMI">0</span>
+                        <span class="bmi-status" id="bmiStatus"></span>
+                    </div>
+                </div>
+
+                <!-- 三大营养素 -->
+                <h3 class="section-title">三大营养素推荐摄入量</h3>
+                <div class="nutrients-grid">
+                    <div class="nutrient-card carbs">
+                        <div class="nutrient-icon">🌾</div>
+                        <div class="nutrient-name">碳水化合物</div>
+                        <div class="nutrient-value">
+                            <span class="value" id="carbsGram">0</span>
+                            <span class="unit">克</span>
+                        </div>
+                        <div class="nutrient-percent" id="carbsPercent">0%</div>
+                        <div class="nutrient-tip" id="carbsTip">建议：粗粮占50-70%</div>
+                    </div>
+
+                    <div class="nutrient-card protein">
+                        <div class="nutrient-icon">🥩</div>
+                        <div class="nutrient-name">蛋白质</div>
+                        <div class="nutrient-value">
+                            <span class="value" id="proteinGram">0</span>
+                            <span class="unit">克</span>
+                        </div>
+                        <div class="nutrient-percent" id="proteinPercent">0%</div>
+                        <div class="nutrient-tip">建议：动物+植物各一半</div>
+                    </div>
+
+                    <div class="nutrient-card fat">
+                        <div class="nutrient-icon">🥑</div>
+                        <div class="nutrient-name">脂肪</div>
+                        <div class="nutrient-value">
+                            <span class="value" id="fatGram">0</span>
+                            <span class="unit">克</span>
+                        </div>
+                        <div class="nutrient-percent" id="fatPercent">0%</div>
+                        <div class="nutrient-tip">建议：植物油约35g，其余来自动物性食物</div>
+                    </div>
+                </div>
+
+                <!-- 食物参考量 -->
+                <h3 class="section-title">每日食物参考量</h3>
+                <div class="food-reference">
+                    <div class="food-item">
+                        <span class="food-icon">🥚</span>
+                        <span class="food-name">鸡蛋</span>
+                        <span class="food-amount" id="eggAmount">0个</span>
+                    </div>
+                    <div class="food-item">
+                        <span class="food-icon">🥛</span>
+                        <span class="food-name">牛奶</span>
+                        <span class="food-amount" id="milkAmount">0ml</span>
+                    </div>
+                    <div class="food-item">
+                        <span class="food-icon">🍖</span>
+                        <span class="food-name">瘦肉/鱼</span>
+                        <span class="food-amount" id="meatAmount">0g</span>
+                    </div>
+                    <div class="food-item">
+                        <span class="food-icon">🫒</span>
+                        <span class="food-name">烹调油</span>
+                        <span class="food-amount" id="oilAmount">0g</span>
+                    </div>
+                    <div class="food-item">
+                        <span class="food-icon">🍚</span>
+                        <span class="food-name">主食总量</span>
+                        <span class="food-amount" id="grainAmount">0g</span>
+                    </div>
+                </div>
+
+                <!-- 温馨提示 -->
+                <div class="tips-section">
+                    <h3 class="tips-title">💡 温馨提示</h3>
+                    <ul class="tips-list" id="tipsList">
+                        <li>实际摄入应结合真实活动量、饱腹感、血糖/体重变化动态调整</li>
+                        <li>年龄>60岁建议减少总热量10%-15%</li>
+                        <li>本计算仅供参考，特殊疾病请咨询营养师/医生</li>
+                    </ul>
+                </div>
+
+                <!-- 重新计算按钮 -->
+                <button class="recalc-btn" id="recalcBtn">重新计算</button>
+            </section>
+        </main>
+
+        <!-- 页面底部 -->
+        <footer class="footer">
+            <div class="disclaimer">
+                <strong>免责声明：</strong>本工具基于公开营养学资料及临床经验总结，仅供健康科普与参考使用，不作为医疗诊断或治疗依据。糖尿病、脑病、肾病等特殊人群请务必在专业营养师或医生指导下调整饮食。
+            </div>
+            <div class="copyright">
+                © 2024 每日热量摄入计算器 | 健康热量助手
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

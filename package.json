@@ -1,0 +1,22 @@
+{
+  "name": "calorie-intake-calculator",
+  "version": "1.0.0",
+  "description": "每日热量摄入计算器 - 基于中国临床营养实践的健康热量助手",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve -s . -p 8080",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "echo 'Ready for deployment'"
+  },
+  "keywords": [
+    "calorie",
+    "calculator",
+    "nutrition",
+    "health"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
